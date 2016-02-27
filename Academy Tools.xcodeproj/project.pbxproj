@@ -14,6 +14,16 @@
 		08F58E551C7F91E8001B21FB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 08F58E541C7F91E8001B21FB /* Assets.xcassets */; };
 		08F58E581C7F91E8001B21FB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08F58E561C7F91E8001B21FB /* LaunchScreen.storyboard */; };
 		08F58E631C7F91E9001B21FB /* Academy_ToolsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F58E621C7F91E9001B21FB /* Academy_ToolsTests.swift */; };
+		08F58E6E1C7FA461001B21FB /* ConnectedToNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F58E6D1C7FA461001B21FB /* ConnectedToNetwork.swift */; };
+		08F58E701C7FFFB0001B21FB /* AcademyTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F58E6F1C7FFFB0001B21FB /* AcademyTableViewController.swift */; };
+		08F58E721C8001CC001B21FB /* Academy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F58E711C8001CC001B21FB /* Academy.swift */; };
+		08F58E741C800B9C001B21FB /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F58E731C800B9C001B21FB /* SwiftyJSON.swift */; };
+		08F58E761C8011E9001B21FB /* AcademyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F58E751C8011E9001B21FB /* AcademyTableViewCell.swift */; };
+		08F58E781C80A1AA001B21FB /* StudentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F58E771C80A1AA001B21FB /* StudentTableViewController.swift */; };
+		08F58E7A1C80B611001B21FB /* Student.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F58E791C80B611001B21FB /* Student.swift */; };
+		08F58E7C1C80F40E001B21FB /* StudentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F58E7B1C80F40E001B21FB /* StudentTableViewCell.swift */; };
+		08F58E7E1C81362B001B21FB /* Skill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F58E7D1C81362B001B21FB /* Skill.swift */; };
+		08F58E801C813675001B21FB /* SkillMeasure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F58E7F1C813675001B21FB /* SkillMeasure.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +48,16 @@
 		08F58E5E1C7F91E9001B21FB /* Academy ToolsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Academy ToolsTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		08F58E621C7F91E9001B21FB /* Academy_ToolsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Academy_ToolsTests.swift; sourceTree = "<group>"; };
 		08F58E641C7F91E9001B21FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		08F58E6D1C7FA461001B21FB /* ConnectedToNetwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedToNetwork.swift; sourceTree = "<group>"; };
+		08F58E6F1C7FFFB0001B21FB /* AcademyTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AcademyTableViewController.swift; sourceTree = "<group>"; };
+		08F58E711C8001CC001B21FB /* Academy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Academy.swift; path = ../Academy.swift; sourceTree = "<group>"; };
+		08F58E731C800B9C001B21FB /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
+		08F58E751C8011E9001B21FB /* AcademyTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AcademyTableViewCell.swift; sourceTree = "<group>"; };
+		08F58E771C80A1AA001B21FB /* StudentTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentTableViewController.swift; sourceTree = "<group>"; };
+		08F58E791C80B611001B21FB /* Student.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Student.swift; sourceTree = "<group>"; };
+		08F58E7B1C80F40E001B21FB /* StudentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentTableViewCell.swift; sourceTree = "<group>"; };
+		08F58E7D1C81362B001B21FB /* Skill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Skill.swift; sourceTree = "<group>"; };
+		08F58E7F1C813675001B21FB /* SkillMeasure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkillMeasure.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,13 +99,23 @@
 		08F58E491C7F91E8001B21FB /* Academy Tools */ = {
 			isa = PBXGroup;
 			children = (
+				08F58E711C8001CC001B21FB /* Academy.swift */,
 				08F58E4A1C7F91E8001B21FB /* AppDelegate.swift */,
 				08F58E4C1C7F91E8001B21FB /* ViewController.swift */,
+				08F58E6F1C7FFFB0001B21FB /* AcademyTableViewController.swift */,
+				08F58E771C80A1AA001B21FB /* StudentTableViewController.swift */,
+				08F58E7B1C80F40E001B21FB /* StudentTableViewCell.swift */,
+				08F58E751C8011E9001B21FB /* AcademyTableViewCell.swift */,
 				08F58E4E1C7F91E8001B21FB /* Main.storyboard */,
+				08F58E731C800B9C001B21FB /* SwiftyJSON.swift */,
+				08F58E791C80B611001B21FB /* Student.swift */,
+				08F58E6D1C7FA461001B21FB /* ConnectedToNetwork.swift */,
 				08F58E541C7F91E8001B21FB /* Assets.xcassets */,
 				08F58E561C7F91E8001B21FB /* LaunchScreen.storyboard */,
 				08F58E591C7F91E8001B21FB /* Info.plist */,
 				08F58E511C7F91E8001B21FB /* Academy_Tools.xcdatamodeld */,
+				08F58E7D1C81362B001B21FB /* Skill.swift */,
+				08F58E7F1C813675001B21FB /* SkillMeasure.swift */,
 			);
 			path = "Academy Tools";
 			sourceTree = "<group>";
@@ -202,9 +232,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08F58E801C813675001B21FB /* SkillMeasure.swift in Sources */,
 				08F58E4D1C7F91E8001B21FB /* ViewController.swift in Sources */,
 				08F58E4B1C7F91E8001B21FB /* AppDelegate.swift in Sources */,
+				08F58E721C8001CC001B21FB /* Academy.swift in Sources */,
+				08F58E7A1C80B611001B21FB /* Student.swift in Sources */,
 				08F58E531C7F91E8001B21FB /* Academy_Tools.xcdatamodeld in Sources */,
+				08F58E761C8011E9001B21FB /* AcademyTableViewCell.swift in Sources */,
+				08F58E701C7FFFB0001B21FB /* AcademyTableViewController.swift in Sources */,
+				08F58E741C800B9C001B21FB /* SwiftyJSON.swift in Sources */,
+				08F58E6E1C7FA461001B21FB /* ConnectedToNetwork.swift in Sources */,
+				08F58E7E1C81362B001B21FB /* Skill.swift in Sources */,
+				08F58E7C1C80F40E001B21FB /* StudentTableViewCell.swift in Sources */,
+				08F58E781C80A1AA001B21FB /* StudentTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
