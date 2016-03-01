@@ -13,7 +13,6 @@ class AcademyTableViewController: UITableViewController {
     var academies = [Academy]()
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadAcademies()
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -26,56 +25,7 @@ class AcademyTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func loadAcademies(){
-        if networkTester.connectedToNetwork() {
-            let url = "https://test.fsi.illinois.edu/academy%20tools/data/data.cfm"
-            
-            let request = NSMutableURLRequest(URL: NSURL(string: url)!)
-            let session = NSURLSession.sharedSession()
-            request.HTTPMethod = "POST"
-            
-            let params = ["action":"getGroups"] as Dictionary<String,String>
-            request.HTTPBody = try! NSJSONSerialization.dataWithJSONObject(params, options: [])
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue("application/json", forHTTPHeaderField: "Accept")
-            
-            let task = session.dataTaskWithRequest(request){data, response, error in
-                let json = JSON(data: data!)
-                let acas = json["academies"]
-                for (_,a):(String, JSON) in acas {
-                    let name = a["group_name"].string
-                    let group_id = a["group_id"].int
-                    let students = a["students"]
-                    var studentsArr = [Student]()
-                    for(_,s):(String, JSON) in students{
-                        let newStudent = Student(
-                            first_name: s["first_name"].string!,
-                            last_name: s["last_name"].string!,
-                            agency_name: s["agency_name"].string!,
-                            people_id: s["people_id"].int!,
-                            bio_text: s["bio_text"].string!,
-                            company: s["company"].string!
-                        )
-                        studentsArr.append(newStudent!)
-                    }
-                    let newAcademy = Academy(name: name!, group_id: group_id!, students: studentsArr)
-                    self.academies.append(newAcademy!)
-                    
-                }
-                self.saveAcademies()
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.tableView.reloadData()
-                })
-            }
-            task.resume()
-            
-
-        } else {
-            print("No network")
-            self.academies = self.loadAcademiesFromFile()!
-        }
-        
-    }
+    
 
     // MARK: - Table view data source
 
@@ -99,6 +49,7 @@ class AcademyTableViewController: UITableViewController {
         // Configure the cell...
         return cell
     }
+    
     
 
     /*

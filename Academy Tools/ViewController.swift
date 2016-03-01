@@ -10,7 +10,8 @@ import UIKit
 
 class ViewController: UIViewController {
     var networkTester = NetworkTester()
-    
+    var academies = [Academy]()
+    var skills = [Skill]()
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -26,10 +27,11 @@ class ViewController: UIViewController {
     @IBAction func testButton(sender: UIButton) {
         loadAcademies()
     }
+    
     func loadAcademies(){
         if networkTester.connectedToNetwork() {
             let url = "https://test.fsi.illinois.edu/academy%20tools/data/data.cfm"
-            print(url)
+            
             let request = NSMutableURLRequest(URL: NSURL(string: url)!)
             let session = NSURLSession.sharedSession()
             request.HTTPMethod = "POST"
@@ -40,34 +42,95 @@ class ViewController: UIViewController {
             request.addValue("application/json", forHTTPHeaderField: "Accept")
             
             let task = session.dataTaskWithRequest(request){data, response, error in
-                guard data != nil else {
-                    print("No Data \(error)")
-                    return
-                }
-                do {
-                    if let json = try NSJSONSerialization.JSONObjectWithData(data!, options: []) as? NSDictionary {
-                        let responseCode = json["responseCode"] as? Int
-                        // Okay, the `json` is here, let's get the value for 'success' out of it
-                        print("Success: \(responseCode)")
-                    } else {
-                        let jsonStr = NSString(data: data!, encoding: NSUTF8StringEncoding)
-                        // No error thrown, but not NSDictionary
-                        print("Error could not parse JSON: \(jsonStr)")
+                let json = JSON(data: data!)
+                let acas = json["academies"]
+                let skills = json["skills"]
+                for (_,a):(String, JSON) in acas {
+                    let name = a["group_name"].string
+                    let group_id = a["group_id"].int
+                    let students = a["students"]
+                    var studentsArr = [Student]()
+                    for(_,s):(String, JSON) in students{
+                        let newStudent = Student(
+                            first_name: s["first_name"].string!,
+                            last_name: s["last_name"].string!,
+                            agency_name: s["agency_name"].string!,
+                            people_id: s["people_id"].int!,
+                            bio_text: s["bio_text"].string!,
+                            company: s["company"].string!
+                        )
+                        studentsArr.append(newStudent!)
                     }
-                } catch let parseError {
-                    print(parseError)
-                    // Log the error thrown by `JSONObjectWithData`
-                    let jsonStr = NSString(data: data!, encoding: NSUTF8StringEncoding)
-                    print("Error could not parse JSON: '\(jsonStr)'")
+                    let newAcademy = Academy(name: name!, group_id: group_id!, students: studentsArr)
+                    self.academies.append(newAcademy!)
+                    
                 }
+                /*
+                for(_,s):(String, JSON) in skills{
+                    let skill_id = s["skill_id"].int
+                    let skill_name = s["skill_name"].string
+                    let measures = s["measures"]
+                    var measureArr = [SkillMeasure]()
+                    for(_,m):(String, JSON) in measures {
+                        let measure_id = m["measure_id"].int
+                        let measure_desc = m["measure_desc"].string
+                        let newMeasure = SkillMeasure(measure_desc: measure_desc, measure_id: measure_id!)
+                        measureArr.append(newMeasure!)
+                    }
+                    let newSkill = Skill(skill_name: skill_name!, skill_id: skill_id!, measures: measureArr)
+                    self.skills.append(newSkill!)
+                    
+                }
+                self.saveSkills()
+                */
+                self.saveAcademies()
+                self.skills = self.loadSkillsFromFile()!
                 
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.performSegueWithIdentifier("ShowAcademyList", sender: "AnyObject?")
+                })
             }
             task.resume()
+            
+            
         } else {
-            print("No network")
+            self.academies = self.loadAcademiesFromFile()!
+            self.skills = self.loadSkillsFromFile()!
+            dispatch_async(dispatch_get_main_queue(), {
+                self.performSegueWithIdentifier("ShowAcademyList", sender: "AnyObject?")
+            })
         }
         
     }
-
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        let navController = segue.destinationViewController as! UINavigationController
+        let academyTableViewController = navController.topViewController as! AcademyTableViewController
+        academyTableViewController.academies = academies
+    }
+    
+    func saveAcademies(){
+        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(academies, toFile: Academy.ArchiveURL.path!)
+        if !isSuccessfulSave {
+            print("Failed to save")
+        }
+    }
+    
+    func saveSkills(){
+        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(skills, toFile: Skill.ArchiveURL.path!)
+        if !isSuccessfulSave {
+            print("Failed to save")
+        }
+    }
+    func loadAcademiesFromFile() -> [Academy]?{
+        print("Loading Academies...")
+        return NSKeyedUnarchiver.unarchiveObjectWithFile(Academy.ArchiveURL.path!) as? [Academy]
+        
+    }
+    func loadSkillsFromFile() -> [Skill]?{
+        print("Loading Skills...")
+        return NSKeyedUnarchiver.unarchiveObjectWithFile(Skill.ArchiveURL.path!) as? [Skill]
+        
+    }
 }
 

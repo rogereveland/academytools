@@ -22,6 +22,22 @@ class StudentTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
 
+    @IBAction func unWindToMealList(sender: UIStoryboardSegue){
+        if let sourceViewController = sender.sourceViewController as? StudentViewController, student = sourceViewController.student {
+            /*
+            if let selectedIndexPath = tableView.indexPathForSelectedRow{
+                meals[selectedIndexPath.row] = meal
+                tableView.reloadRowsAtIndexPaths([selectedIndexPath], withRowAnimation: .None)
+            } else {
+                let newIndexPath = NSIndexPath(forRow: meals.count, inSection:0)
+                meals.append(meal)
+                tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Bottom)
+            }
+            saveMeals()
+            */
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -87,9 +103,16 @@ class StudentTableViewController: UITableViewController {
 
     
     // MARK: - Navigation
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        let nav = segue.destinationViewController as! UINavigationController
+        let studentViewController = nav.topViewController as! StudentViewController
+        if let selectedStudentCell = sender as? StudentTableViewCell{
+            let indexPath = tableView.indexPathForCell(selectedStudentCell)!
+            let selectedStudent = students[indexPath.row]
+            studentViewController.student = selectedStudent
+        }
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
     }

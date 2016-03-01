@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08D906D51C84E16500661C69 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D906D41C84E16500661C69 /* LoginViewController.swift */; };
+		08D906D71C84EA5900661C69 /* Instructor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D906D61C84EA5900661C69 /* Instructor.swift */; };
 		08F58E4B1C7F91E8001B21FB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F58E4A1C7F91E8001B21FB /* AppDelegate.swift */; };
 		08F58E4D1C7F91E8001B21FB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F58E4C1C7F91E8001B21FB /* ViewController.swift */; };
 		08F58E501C7F91E8001B21FB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08F58E4E1C7F91E8001B21FB /* Main.storyboard */; };
@@ -24,6 +26,7 @@
 		08F58E7C1C80F40E001B21FB /* StudentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F58E7B1C80F40E001B21FB /* StudentTableViewCell.swift */; };
 		08F58E7E1C81362B001B21FB /* Skill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F58E7D1C81362B001B21FB /* Skill.swift */; };
 		08F58E801C813675001B21FB /* SkillMeasure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F58E7F1C813675001B21FB /* SkillMeasure.swift */; };
+		08F58E821C82B920001B21FB /* StudentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F58E811C82B920001B21FB /* StudentViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +40,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		08D906D41C84E16500661C69 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		08D906D61C84EA5900661C69 /* Instructor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Instructor.swift; sourceTree = "<group>"; };
 		08F58E471C7F91E8001B21FB /* Academy Tools.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Academy Tools.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		08F58E4A1C7F91E8001B21FB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		08F58E4C1C7F91E8001B21FB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -58,6 +63,7 @@
 		08F58E7B1C80F40E001B21FB /* StudentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentTableViewCell.swift; sourceTree = "<group>"; };
 		08F58E7D1C81362B001B21FB /* Skill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Skill.swift; sourceTree = "<group>"; };
 		08F58E7F1C813675001B21FB /* SkillMeasure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkillMeasure.swift; sourceTree = "<group>"; };
+		08F58E811C82B920001B21FB /* StudentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,11 +108,13 @@
 				08F58E711C8001CC001B21FB /* Academy.swift */,
 				08F58E4A1C7F91E8001B21FB /* AppDelegate.swift */,
 				08F58E4C1C7F91E8001B21FB /* ViewController.swift */,
+				08D906D41C84E16500661C69 /* LoginViewController.swift */,
 				08F58E6F1C7FFFB0001B21FB /* AcademyTableViewController.swift */,
 				08F58E771C80A1AA001B21FB /* StudentTableViewController.swift */,
 				08F58E7B1C80F40E001B21FB /* StudentTableViewCell.swift */,
 				08F58E751C8011E9001B21FB /* AcademyTableViewCell.swift */,
 				08F58E4E1C7F91E8001B21FB /* Main.storyboard */,
+				08F58E811C82B920001B21FB /* StudentViewController.swift */,
 				08F58E731C800B9C001B21FB /* SwiftyJSON.swift */,
 				08F58E791C80B611001B21FB /* Student.swift */,
 				08F58E6D1C7FA461001B21FB /* ConnectedToNetwork.swift */,
@@ -116,6 +124,7 @@
 				08F58E511C7F91E8001B21FB /* Academy_Tools.xcdatamodeld */,
 				08F58E7D1C81362B001B21FB /* Skill.swift */,
 				08F58E7F1C813675001B21FB /* SkillMeasure.swift */,
+				08D906D61C84EA5900661C69 /* Instructor.swift */,
 			);
 			path = "Academy Tools";
 			sourceTree = "<group>";
@@ -235,15 +244,18 @@
 				08F58E801C813675001B21FB /* SkillMeasure.swift in Sources */,
 				08F58E4D1C7F91E8001B21FB /* ViewController.swift in Sources */,
 				08F58E4B1C7F91E8001B21FB /* AppDelegate.swift in Sources */,
+				08D906D51C84E16500661C69 /* LoginViewController.swift in Sources */,
 				08F58E721C8001CC001B21FB /* Academy.swift in Sources */,
 				08F58E7A1C80B611001B21FB /* Student.swift in Sources */,
 				08F58E531C7F91E8001B21FB /* Academy_Tools.xcdatamodeld in Sources */,
 				08F58E761C8011E9001B21FB /* AcademyTableViewCell.swift in Sources */,
+				08D906D71C84EA5900661C69 /* Instructor.swift in Sources */,
 				08F58E701C7FFFB0001B21FB /* AcademyTableViewController.swift in Sources */,
 				08F58E741C800B9C001B21FB /* SwiftyJSON.swift in Sources */,
 				08F58E6E1C7FA461001B21FB /* ConnectedToNetwork.swift in Sources */,
 				08F58E7E1C81362B001B21FB /* Skill.swift in Sources */,
 				08F58E7C1C80F40E001B21FB /* StudentTableViewCell.swift in Sources */,
+				08F58E821C82B920001B21FB /* StudentViewController.swift in Sources */,
 				08F58E781C80A1AA001B21FB /* StudentTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -434,6 +446,7 @@
 				08F58E691C7F91E9001B21FB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		08F58E6A1C7F91E9001B21FB /* Build configuration list for PBXNativeTarget "Academy ToolsTests" */ = {
 			isa = XCConfigurationList;
@@ -442,6 +455,7 @@
 				08F58E6C1C7F91E9001B21FB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

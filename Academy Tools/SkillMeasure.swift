@@ -2,42 +2,37 @@ import UIKit
 
 class SkillMeasure: NSObject, NSCoding {
     //MARK: Properties
-    var name: String?
-    var group_id: Int
-    var students: [Student]?
+    var measure_desc: String?
+    var measure_id: Int
     
     // MARK: Archiving Paths
     
     static let DocumentsDirectory = NSFileManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
-    static let ArchiveURL = DocumentsDirectory.URLByAppendingPathComponent("academies")
+    static let ArchiveURL = DocumentsDirectory.URLByAppendingPathComponent("measures")
     
     //MARK: Initialization
     struct PropertyKey{
-        static let nameKey = "name"
-        static let group_idKey = "group_id"
-        static let studentsKey = "students"
+        static let measureDescKey = "measure_desc"
+        static let measureIdKey = "measure_id"
     }
     
-    init?(name: String, group_id: Int, students: [Student]){
+    init?(measure_desc: String?, measure_id: Int){
         // Initialize stored properties
-        self.name = name
-        self.group_id = group_id
-        self.students = students
+        self.measure_desc = measure_desc
+        self.measure_id = measure_id
         super.init()
         
     }
     
     func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(name, forKey: PropertyKey.nameKey)
-        aCoder.encodeInteger(group_id, forKey: PropertyKey.group_idKey)
-        aCoder.encodeObject(students, forKey: PropertyKey.studentsKey)
+        aCoder.encodeObject(measure_desc, forKey: PropertyKey.measureDescKey)
+        aCoder.encodeInteger(measure_id, forKey: PropertyKey.measureIdKey)
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
         
-        let name = aDecoder.decodeObjectForKey(PropertyKey.nameKey) as! String
-        let group_id = aDecoder.decodeIntegerForKey(PropertyKey.group_idKey)
-        let students = aDecoder.decodeObjectForKey(PropertyKey.studentsKey) as! [Student]
-        self.init(name:name, group_id:group_id,students:students)
+        let measure_desc = aDecoder.decodeObjectForKey(PropertyKey.measureDescKey) as? String
+        let measure_id = aDecoder.decodeIntegerForKey(PropertyKey.measureIdKey)
+        self.init(measure_desc:measure_desc, measure_id:measure_id)
     }
 }
