@@ -47,6 +47,7 @@ class ViewController: UIViewController {
                 let skills = json["skills"]
                 for (_,a):(String, JSON) in acas {
                     let name = a["group_name"].string
+                    print("name " + name!)
                     let group_id = a["group_id"].int
                     let students = a["students"]
                     var studentsArr = [Student]()
@@ -57,7 +58,8 @@ class ViewController: UIViewController {
                             agency_name: s["agency_name"].string!,
                             people_id: s["people_id"].int!,
                             bio_text: s["bio_text"].string!,
-                            company: s["company"].string!
+                            company: s["company"].string!,
+                            evals : []
                         )
                         studentsArr.append(newStudent!)
                     }
@@ -65,24 +67,7 @@ class ViewController: UIViewController {
                     self.academies.append(newAcademy!)
                     
                 }
-                /*
-                for(_,s):(String, JSON) in skills{
-                    let skill_id = s["skill_id"].int
-                    let skill_name = s["skill_name"].string
-                    let measures = s["measures"]
-                    var measureArr = [SkillMeasure]()
-                    for(_,m):(String, JSON) in measures {
-                        let measure_id = m["measure_id"].int
-                        let measure_desc = m["measure_desc"].string
-                        let newMeasure = SkillMeasure(measure_desc: measure_desc, measure_id: measure_id!)
-                        measureArr.append(newMeasure!)
-                    }
-                    let newSkill = Skill(skill_name: skill_name!, skill_id: skill_id!, measures: measureArr)
-                    self.skills.append(newSkill!)
-                    
-                }
-                self.saveSkills()
-                */
+                
                 self.saveAcademies()
                 self.skills = self.loadSkillsFromFile()!
                 

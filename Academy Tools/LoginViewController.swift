@@ -20,13 +20,17 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         if let ins = loadInstructor() {
             instructor = ins
-            self.performSegueWithIdentifier("showLoading", sender: "AnyObject?")
+            dispatch_async(dispatch_get_main_queue(), {
+                self.performSegueWithIdentifier("showLoading", sender: "AnyObject?")
+            })
         }
         
         // Do any additional setup after loading the view.
     }
     
-
+    override func viewWillAppear(animated: Bool) {
+        self.navigationController?.navigationBarHidden = true
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -69,10 +73,6 @@ class LoginViewController: UIViewController {
                 })
             }
             
-            
-            /*
-           
-            */
         }
         task.resume()
         

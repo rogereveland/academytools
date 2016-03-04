@@ -11,13 +11,16 @@ import UIKit
 class AcademyTableViewController: UITableViewController {
     var networkTester = NetworkTester()
     var academies = [Academy]()
+    var instructor = Instructor(instructorName: "", instructorID: 0)
+    
+    @IBOutlet weak var logoutButton: UIBarButtonItem!
+    
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        self.instructor = loadInstructor()
+        logoutButton.title = "Logout " + instructor!.instructorName!
     }
 
     override func didReceiveMemoryWarning() {
@@ -26,6 +29,14 @@ class AcademyTableViewController: UITableViewController {
     }
     
     
+    @IBAction func logoutInstructor(sender: UIBarButtonItem) {
+        do {
+            try NSFileManager.defaultManager().removeItemAtURL(Instructor.ArchiveURL)
+        } catch {
+            
+        }
+        self.performSegueWithIdentifier("logoutAndShowLogin", sender: "logoutButton")
+    }
 
     // MARK: - Table view data source
 
@@ -92,11 +103,16 @@ class AcademyTableViewController: UITableViewController {
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let studentTableViewController = segue.destinationViewController as! StudentTableViewController
-        if let selectedAcademyCell = sender as? AcademyTableViewCell{
-            let indexPath = tableView.indexPathForCell(selectedAcademyCell)!
-            let selectedAcademy = academies[indexPath.row]
-            studentTableViewController.selectedAcademy = selectedAcademy
+        
+        if segue.identifier! != "logoutAndShowLogin" {
+            let studentTableViewController = segue.destinationViewController as! StudentTableViewController
+            if let selectedAcademyCell = sender as? AcademyTableViewCell{
+                let indexPath = tableView.indexPathForCell(selectedAcademyCell)!
+                let selectedAcademy = academies[indexPath.row]
+                studentTableViewController.selectedAcademy = selectedAcademy
+            }
+        } else {
+            
         }
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
@@ -114,6 +130,9 @@ class AcademyTableViewController: UITableViewController {
     func loadAcademiesFromFile() -> [Academy]?{
         return NSKeyedUnarchiver.unarchiveObjectWithFile(Academy.ArchiveURL.path!) as? [Academy]
     }
-
+    
+    func loadInstructor() -> Instructor?{
+        return NSKeyedUnarchiver.unarchiveObjectWithFile(Instructor.ArchiveURL.path!) as? Instructor
+    }
 
 }
