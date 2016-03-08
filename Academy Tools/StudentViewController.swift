@@ -8,12 +8,18 @@
 
 import UIKit
 
-class StudentViewController: UIViewController {
+class StudentViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var networkTester = NetworkTester()
     var student:Student!
     var studentMeasures:[StudentMeasure] = []
+    var skills = [Skill]()
     
+    @IBOutlet weak var evalTable: UITableView!
+    @IBOutlet weak var evaluatorName: UILabel!
+    @IBOutlet weak var evaluationDate: UILabel!
     @IBOutlet var studentTitle: UIView!
+    @IBOutlet weak var loadingData: UILabel!
+    
     @IBAction func studentBackButton(sender: AnyObject) {
         let isPresenting = presentingViewController is UINavigationController
         if isPresenting {
@@ -23,10 +29,15 @@ class StudentViewController: UIViewController {
         }
     }
     
+    override func viewWillAppear(animated: Bool) {
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = student.first_name! + " " + student.last_name!
         loadStudentEvals()
+        loadingData.hidden = false
         //studentNavBar.topItem!.title = student.first_name
         // Do any additional setup after loading the view.
     }
@@ -44,7 +55,7 @@ class StudentViewController: UIViewController {
             let session = NSURLSession.sharedSession()
             request.HTTPMethod = "POST"
             
-            let params = ["action":"getGroups","people_id": String(student.people_id)] as Dictionary<String,String>
+            let params = ["action":"getEvals","people_id": String(student.people_id)] as Dictionary<String,String>
             request.HTTPBody = try! NSJSONSerialization.dataWithJSONObject(params, options: [])
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue("application/json", forHTTPHeaderField: "Accept")
@@ -60,6 +71,7 @@ class StudentViewController: UIViewController {
                     let passfail = e["passfail"].string
                     let skill_id = e["skill_id"].int
                     let measures = e["measures"]
+                    let eval_date = e["eval_date"].string
                     var measuresArr = [StudentMeasure]()
                     for(_,m):(String, JSON) in measures{
                         let newMeasure = StudentMeasure(
@@ -68,19 +80,28 @@ class StudentViewController: UIViewController {
                         )
                         measuresArr.append(newMeasure!)
                     }
-                    let newEval = StudentEval(eval_id:eval_id!, evaluatorName: evaluatorName!, skill_id: skill_id!, measures: measuresArr, comments: comments!, passfail: passfail!)
+                    let newEval = StudentEval(eval_id:eval_id!, evaluatorName: evaluatorName!, skill_id: skill_id!, measures: measuresArr, comments: comments!, passfail: passfail!,eval_date: eval_date!)
                     evalsArr.append(newEval!)
                     
                 }
                 self.student.evals = evalsArr
                 self.saveStudent()
+                self.skills = self.loadSkillsFromFile()!
+                
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.evalTable.reloadData()
+                    self.loadingData.hidden = true
+                    print("Reloading Data")
+                })
                 
             }
             task.resume()
             
             
         } else {
-            
+            self.skills = self.loadSkillsFromFile()!
+            self.student = loadStudentFromFile()
+            self.loadingData.hidden = true
         }
         
     }
@@ -95,19 +116,65 @@ class StudentViewController: UIViewController {
     func loadStudent() -> Student?{
         return NSKeyedUnarchiver.unarchiveObjectWithFile(Student.ArchiveURL.path!) as? Student
     }
-   
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        // #warning Incomplete implementation, return the number of sections
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print(student.evals!.count)
+        return student.evals!.count
+    }
+    
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        let cellIdentifier = "evalCell"
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as!
+        EvalTableViewCell
+        let studentEval = student.evals![indexPath.row]
+        cell.evaluatorName.text = studentEval.evaluatorName
+        cell.skillName.text = getSkillName(studentEval.skill_id)
+        cell.passFail.text = studentEval.passfail
+        cell.evaluationDate.text = studentEval.eval_date
+        return cell
+    }
+    
+    func getSkillName(skill_id: Int) -> String {
+        for s in self.skills {
+            if s.skill_id == skill_id {
+                return s.skill_name!
+            }
+        }
+        return "Blank"
+    }
+    
+    func loadSkillsFromFile() -> [Skill]?{
+        return NSKeyedUnarchiver.unarchiveObjectWithFile(Skill.ArchiveURL.path!) as? [Skill]
+        
+    }
+    
+    func loadStudentFromFile() -> Student?{
+        return NSKeyedUnarchiver.unarchiveObjectWithFile(Student.ArchiveURL.path!) as? Student
+        
+    }
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        /*
-        let studentTableViewController = segue.destinationViewController as! StudentTableViewController
-        if let selectedAcademyCell = sender as? AcademyTableViewCell{
-            //let indexPath = tableView.indexPathForCell(selectedAcademyCell)!
-            //let selectedAcademy = academies[indexPath.row]
-            //studentTableViewController.selectedAcademy = selectedAcademy
-        }
-        */
+        print(segue.identifier)
+        if segue.identifier! == "ShowEval" {
+            let studentEvalTableViewController = segue.destinationViewController as! StudentEvalTableViewController
+            if let selectedEvalCell = sender as? EvalTableViewCell{
+                let indexPath = evalTable.indexPathForCell(selectedEvalCell)!
+                let selectedEval = student.evals![indexPath.row]
+                print(selectedEval)
+                studentEvalTableViewController.selectedEval = selectedEval
+            }
+        }        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
     }
     
 

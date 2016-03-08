@@ -16,7 +16,7 @@ class StudentEval: NSObject, NSCoding {
     var measures: [StudentMeasure]?
     var comments : String?
     var passfail : String?
-    
+    var eval_date : String?
     // MARK: Archiving Paths
     
     static let DocumentsDirectory = NSFileManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
@@ -30,9 +30,10 @@ class StudentEval: NSObject, NSCoding {
         static let commentsKey = "comments"
         static let passfailKey = "passfail"
         static let evalIDKey = "eval_id"
+        static let evalDateKey = "eval_date"
     }
     
-    init?(eval_id: Int, evaluatorName: String, skill_id: Int, measures: [StudentMeasure], comments: String, passfail: String){
+    init?(eval_id: Int, evaluatorName: String, skill_id: Int, measures: [StudentMeasure], comments: String, passfail: String, eval_date: String){
         // Initialize stored properties
         self.evaluatorName = evaluatorName
         self.skill_id = skill_id
@@ -40,6 +41,7 @@ class StudentEval: NSObject, NSCoding {
         self.comments = comments
         self.passfail = passfail
         self.eval_id = eval_id
+        self.eval_date = eval_date
         super.init()
         
     }
@@ -51,6 +53,7 @@ class StudentEval: NSObject, NSCoding {
         aCoder.encodeObject(comments, forKey: PropertyKey.commentsKey)
         aCoder.encodeObject(passfail, forKey: PropertyKey.passfailKey)
         aCoder.encodeInteger(eval_id, forKey: PropertyKey.evalIDKey)
+        aCoder.encodeObject(eval_date, forKey: PropertyKey.evalDateKey)
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
@@ -61,6 +64,7 @@ class StudentEval: NSObject, NSCoding {
         let comments = aDecoder.decodeObjectForKey(PropertyKey.commentsKey) as! String
         let passfail = aDecoder.decodeObjectForKey(PropertyKey.passfailKey) as! String
         let eval_id = aDecoder.decodeIntegerForKey(PropertyKey.evalIDKey)
-        self.init(eval_id: eval_id, evaluatorName:evaluatorName, skill_id:skill_id, measures:measures, comments:comments, passfail:passfail)
+        let eval_date = aDecoder.decodeObjectForKey(PropertyKey.evalDateKey) as! String
+        self.init(eval_id: eval_id, evaluatorName:evaluatorName, skill_id:skill_id, measures:measures, comments:comments, passfail:passfail, eval_date:eval_date)
     }
 }

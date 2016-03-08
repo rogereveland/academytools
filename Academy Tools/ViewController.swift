@@ -15,8 +15,23 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        loadAcademies()
+        //loadAcademies()
         
+        
+        
+        
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+       /* 
+        self.academies = loadAcademiesFromFile()!
+        self.skills = loadSkillsFromFile()!
+        dispatch_async(dispatch_get_main_queue(), {
+            print("Why are you still here?")
+            self.performSegueWithIdentifier("ShowAcademyList", sender: "AnyObject?")
+        })
+        */
+        loadAcademies()
     }
 
     override func didReceiveMemoryWarning() {
@@ -67,9 +82,25 @@ class ViewController: UIViewController {
                     self.academies.append(newAcademy!)
                     
                 }
+                for(_,s):(String, JSON) in skills {
+                    let skill_name = s["skill_name"].string
+                    let skill_id = s["skill_id"].int
+                    var measuresArr = [SkillMeasure]()
+                    let measures = s["measures"]
+                    for(_,m):(String,JSON) in measures {
+                        let measure_id = m["measure_id"].int
+                        let measure_desc = m["measure_desc"].string
+                        let newMeasure = SkillMeasure(measure_desc: measure_desc, measure_id: measure_id!)
+                        measuresArr.append(newMeasure!)
+                    }
+                    let newSkill = Skill(skill_name: skill_name!, skill_id: skill_id!, measures: measuresArr)
+                    self.skills.append(newSkill!)
+                }
                 
                 self.saveAcademies()
-                self.skills = self.loadSkillsFromFile()!
+                self.saveSkills()
+                
+                //self.skills = self.loadSkillsFromFile()!
                 
                 dispatch_async(dispatch_get_main_queue(), {
                     self.performSegueWithIdentifier("ShowAcademyList", sender: "AnyObject?")
