@@ -58,13 +58,13 @@ class StudentEval: NSObject, NSCoding {
     
     required convenience init?(coder aDecoder: NSCoder) {
         
-        let evaluatorName = aDecoder.decodeObjectForKey(PropertyKey.skillNameKey) as! String
+        let evaluatorName = aDecoder.decodeObjectForKey(PropertyKey.skillNameKey) as? String
         let skill_id = aDecoder.decodeIntegerForKey(PropertyKey.skillIdKey)
         let measures = aDecoder.decodeObjectForKey(PropertyKey.measuresKey) as! [StudentMeasure]
-        let comments = aDecoder.decodeObjectForKey(PropertyKey.commentsKey) as! String
-        let passfail = aDecoder.decodeObjectForKey(PropertyKey.passfailKey) as! String
+        let comments = aDecoder.decodeObjectForKey(PropertyKey.commentsKey) as? String
+        let passfail = aDecoder.decodeObjectForKey(PropertyKey.passfailKey) as? String
         let eval_id = aDecoder.decodeIntegerForKey(PropertyKey.evalIDKey)
-        let eval_date = aDecoder.decodeObjectForKey(PropertyKey.evalDateKey) as! String
-        self.init(eval_id: eval_id, evaluatorName:evaluatorName, skill_id:skill_id, measures:measures, comments:comments, passfail:passfail, eval_date:eval_date)
+        let eval_date = aDecoder.decodeObjectForKey(PropertyKey.evalDateKey) as? String
+        self.init(eval_id: eval_id, evaluatorName:evaluatorName!, skill_id:skill_id, measures:measures, comments:comments!, passfail:passfail!, eval_date:eval_date!)
     }
 }

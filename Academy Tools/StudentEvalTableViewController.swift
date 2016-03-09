@@ -8,22 +8,32 @@
 
 import UIKit
 
-class StudentEvalTableViewController: UITableViewController {
+protocol SettingCellDelegate : class {
+    func didChangeSwitchState(sender  sender: StudentEvalTableViewCell, isOn: Bool)
+}
+
+class StudentEvalTableViewController: UITableViewController, SettingCellDelegate {
     
     @IBOutlet weak var measureDesc: UILabel!
     var selectedEval:StudentEval!
+    var currentSkill:Skill!
+    var skills:[Skill]!
     
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(selectedEval)
-
+        self.skills = loadSkillsFromFile()
+        self.currentSkill = getSkill(selectedEval.skill_id)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -46,15 +56,74 @@ class StudentEvalTableViewController: UITableViewController {
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("evalTableCell", forIndexPath: indexPath)
         
-        cell.measureDesc.text = ""
-
+        let cell = tableView.dequeueReusableCellWithIdentifier("StudentEvalTableViewCell", forIndexPath: indexPath) as! StudentEvalTableViewCell
+        
+        let measure = selectedEval.measures![indexPath.row]
+        var switchOn = false
+        if measure.result! == "Y" {
+            switchOn = true
+        }
+        cell.passFailSwitch.setOn(switchOn, animated: false)
+        cell.measureDesc.text = getMeasureDesc(measure.measure_id)
+        cell.passFailLabel.text = measure.result
+        cell.cellDelegate = self
+        
         // Configure the cell...
 
         return cell
     }
     
+    func getSkill(skill_id: Int) -> Skill? {
+        var currentSkill = skills[0]
+        for skill in skills {
+            if skill.skill_id == skill_id {
+                currentSkill = skill
+            }
+        }
+        
+        return currentSkill
+    }
+    
+    func getMeasureDesc(measure_id: Int) -> String? {
+        var measureDesc = ""
+        
+        for measure in self.currentSkill.measures! {
+            if measure.measure_id == measure_id {
+                measureDesc = measure.measure_desc!
+            }
+        }
+        
+        return measureDesc
+    }
+    
+    func loadSkillsFromFile() -> [Skill]?{
+        return NSKeyedUnarchiver.unarchiveObjectWithFile(Skill.ArchiveURL.path!) as? [Skill]
+        
+    }
+    
+    
+    
+    func didChangeSwitchState(sender sender: StudentEvalTableViewCell, isOn: Bool) {
+        let indexPath = self.tableView.indexPathForCell(sender)
+        var measure = selectedEval.measures![indexPath!.row]
+        
+        if isOn {
+            measure.result = "Y"
+        } else {
+            measure.result = "N"
+        }
+        
+        print("Called it")
+        
+    }
+    
+    func saveSkills(){
+        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(skills, toFile: Skill.ArchiveURL.path!)
+        if !isSuccessfulSave {
+            print("Failed to save")
+        }
+    }
 
     /*
     // Override to support conditional editing of the table view.

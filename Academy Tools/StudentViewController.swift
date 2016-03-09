@@ -99,9 +99,10 @@ class StudentViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             
         } else {
+            self.loadingData.hidden = true
             self.skills = self.loadSkillsFromFile()!
             self.student = loadStudentFromFile()
-            self.loadingData.hidden = true
+            
         }
         
     }
@@ -170,11 +171,11 @@ class StudentViewController: UIViewController, UITableViewDelegate, UITableViewD
             if let selectedEvalCell = sender as? EvalTableViewCell{
                 let indexPath = evalTable.indexPathForCell(selectedEvalCell)!
                 let selectedEval = student.evals![indexPath.row]
-                print(selectedEval)
+                print(selectedEval.eval_id)
                 studentEvalTableViewController.selectedEval = selectedEval
             }
-        }        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        }
+        
     }
     
 

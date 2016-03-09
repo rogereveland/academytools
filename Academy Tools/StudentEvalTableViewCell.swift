@@ -8,7 +8,23 @@
 
 import UIKit
 
-class StudentEvalTableViewCell: UITableViewCell {    
+
+class StudentEvalTableViewCell: UITableViewCell {
+    
+    @IBOutlet weak var measureDesc: UILabel!
+    @IBOutlet weak var passFailSwitch: UISwitch!
+    @IBOutlet weak var passFailLabel: UILabel!
+    weak var cellDelegate: SettingCellDelegate?
+    @IBAction func togglePassFail(sender: UISwitch) {
+        self.cellDelegate?.didChangeSwitchState(sender: self, isOn:passFailSwitch.on)
+    }
+    
+    
+    
+    
+    @IBAction func handledSwitchChange(sender: UISwitch) {
+        
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
