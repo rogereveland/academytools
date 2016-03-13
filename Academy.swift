@@ -8,12 +8,13 @@
 
 
 import UIKit
+import GRDB
 
-class Academy: NSObject, NSCoding {
+class Academy: Record {
     //MARK: Properties
-    var name: String?
-    var group_id: Int
-    var students: [Student]?
+    var group_name: String?
+    var group_id: Int64
+    //var students: [Student]?
     
     // MARK: Archiving Paths
     
@@ -21,21 +22,41 @@ class Academy: NSObject, NSCoding {
     static let ArchiveURL = DocumentsDirectory.URLByAppendingPathComponent("academies")
     
     //MARK: Initialization
+    /*
     struct PropertyKey{
-        static let nameKey = "name"
+        static let group_nameKey = "group_name"
         static let group_idKey = "group_id"
         static let studentsKey = "students"
     }
-    
-    init?(name: String, group_id: Int, students: [Student]){
+    */
+
+    init?(group_name: String, group_id: Int64){
         // Initialize stored properties
-        self.name = name
+        self.group_name = group_name
         self.group_id = group_id
-        self.students = students
         super.init()
         
     }
+       required init(_ row: Row) {
+        self.group_name = row.value(named: "group_name")
+        self.group_id = row.value(named: "group_id")
+        //self.students = row.value(named: "students")
+        super.init()
+    }
     
+    override class func databaseTableName() -> String {
+        return "academy"
+    }
+    
+    override var persistentDictionary: [String: DatabaseValueConvertible?] {
+        return ["group_id": group_id, "group_name": group_name]
+    }
+    
+    override func didInsertWithRowID(rowID: Int64, forColumn column: String?) {
+        group_id = rowID
+    }
+    
+    /*
     func encodeWithCoder(aCoder: NSCoder) {
         aCoder.encodeObject(name, forKey: PropertyKey.nameKey)
         aCoder.encodeInteger(group_id, forKey: PropertyKey.group_idKey)
@@ -49,4 +70,5 @@ class Academy: NSObject, NSCoding {
         let students = aDecoder.decodeObjectForKey(PropertyKey.studentsKey) as! [Student]
         self.init(name:name, group_id:group_id,students:students)
     }
+    */
 }

@@ -21,6 +21,7 @@ class AcademyTableViewController: UITableViewController {
         super.viewDidLoad()
         self.instructor = loadInstructor()
         logoutButton.title = "Logout " + instructor!.instructorName!
+               
     }
 
     override func didReceiveMemoryWarning() {
@@ -56,7 +57,7 @@ class AcademyTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as!
             AcademyTableViewCell
         let academy = academies[indexPath.row]
-        cell.academyName.text = academy.name
+        cell.academyName.text = academy.group_name
         // Configure the cell...
         return cell
     }
