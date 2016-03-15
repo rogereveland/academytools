@@ -78,9 +78,11 @@ func setupDatabase() {
                 "last_name TEXT COLLATE localized_case_insensitive, " +
                 "agency_name TEXT COLLATE localized_case_insensitive, " +
                 "bio_text TEXT COLLATE localized_case_insensitive, " +
-                "company TEXT COLLATE localized_case_insensitive " +
+                "company TEXT COLLATE localized_case_insensitive, " +
+                "group_id INTEGER " +
             ")")
     }
+
     
     migrator.registerMigration("createEvals") { db in
         try db.execute(
@@ -95,6 +97,11 @@ func setupDatabase() {
             ")")
     }
     
+    migrator.registerMigration("AddSkillsToEvals") { db in
+        try db.execute(
+            "ALTER TABLE skills_evaluation ADD COLUMN skill_id INTEGER")
+    }
+    
     migrator.registerMigration("createEvalMeasures") { db in
         try db.execute(
             "CREATE TABLE skills_evaluation_measures (" +
@@ -105,6 +112,10 @@ func setupDatabase() {
             ")")
     }
     
+    migrator.registerMigration("AddMeasureDesc") { db in
+        try db.execute(
+            "ALTER TABLE skills_evaluation_measures ADD COLUMN measure_desc TEXT")
+    }
     
     try! migrator.migrate(dbQueue)
     /*

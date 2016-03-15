@@ -7,64 +7,52 @@
 //
 
 import UIKit
+import GRDB
 
-class StudentEval: NSObject, NSCoding {
+class StudentEval: Record {
     //MARK: Properties
-    var eval_id: Int
-    var evaluatorName: String?
-    var skill_id: Int
-    var measures: [StudentMeasure]?
+    var eval_id: Int64
+    var evaluator_name: String?
+    var skill_id: Int64
     var comments : String?
-    var passfail : String?
+    var overall_results : String?
     var eval_date : String?
-    // MARK: Archiving Paths
-    
-    static let DocumentsDirectory = NSFileManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
-    static let ArchiveURL = DocumentsDirectory.URLByAppendingPathComponent("studentEvals")
     
     //MARK: Initialization
-    struct PropertyKey{
-        static let skillNameKey = "evaluatorName"
-        static let skillIdKey = "skill_id"
-        static let measuresKey = "measures"
-        static let commentsKey = "comments"
-        static let passfailKey = "passfail"
-        static let evalIDKey = "eval_id"
-        static let evalDateKey = "eval_date"
-    }
     
-    init?(eval_id: Int, evaluatorName: String, skill_id: Int, measures: [StudentMeasure], comments: String, passfail: String, eval_date: String){
+    init?(eval_id: Int64, evaluator_name: String, skill_id: Int64, comments: String, overall_results: String, eval_date: String){
         // Initialize stored properties
-        self.evaluatorName = evaluatorName
+        self.evaluator_name = evaluator_name
         self.skill_id = skill_id
-        self.measures = measures
         self.comments = comments
-        self.passfail = passfail
+        self.overall_results = overall_results
         self.eval_id = eval_id
         self.eval_date = eval_date
         super.init()
         
     }
     
-    func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(evaluatorName, forKey: PropertyKey.skillNameKey)
-        aCoder.encodeInteger(skill_id, forKey: PropertyKey.skillIdKey)
-        aCoder.encodeObject(measures, forKey: PropertyKey.measuresKey)
-        aCoder.encodeObject(comments, forKey: PropertyKey.commentsKey)
-        aCoder.encodeObject(passfail, forKey: PropertyKey.passfailKey)
-        aCoder.encodeInteger(eval_id, forKey: PropertyKey.evalIDKey)
-        aCoder.encodeObject(eval_date, forKey: PropertyKey.evalDateKey)
+    required init(_ row: Row) {
+        self.eval_id = row.value(named: "eval_id")
+        self.evaluator_name = row.value(named: "evaluator_name")
+        self.skill_id = row.value(named: "skill_id")
+        self.comments = row.value(named: "comments")
+        self.overall_results = row.value(named: "overall_results")
+        self.eval_date = row.value(named: "eval_date")
+        super.init()
     }
     
-    required convenience init?(coder aDecoder: NSCoder) {
-        
-        let evaluatorName = aDecoder.decodeObjectForKey(PropertyKey.skillNameKey) as? String
-        let skill_id = aDecoder.decodeIntegerForKey(PropertyKey.skillIdKey)
-        let measures = aDecoder.decodeObjectForKey(PropertyKey.measuresKey) as! [StudentMeasure]
-        let comments = aDecoder.decodeObjectForKey(PropertyKey.commentsKey) as? String
-        let passfail = aDecoder.decodeObjectForKey(PropertyKey.passfailKey) as? String
-        let eval_id = aDecoder.decodeIntegerForKey(PropertyKey.evalIDKey)
-        let eval_date = aDecoder.decodeObjectForKey(PropertyKey.evalDateKey) as? String
-        self.init(eval_id: eval_id, evaluatorName:evaluatorName!, skill_id:skill_id, measures:measures, comments:comments!, passfail:passfail!, eval_date:eval_date!)
+    override class func databaseTableName() -> String {
+        return "skills_evaluation"
     }
+    
+    override var persistentDictionary: [String: DatabaseValueConvertible?] {
+        return ["eval_id": eval_id, "evaluator_name": evaluator_name, "skill_id":skill_id, "comments":comments, "overall_results":overall_results, "eval_date":eval_date]
+    }
+    
+    override func didInsertWithRowID(rowID: Int64, forColumn column: String?) {
+        eval_id = rowID
+    }
+    
+    
 }

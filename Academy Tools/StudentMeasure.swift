@@ -1,38 +1,46 @@
 import UIKit
+import GRDB
 
-class StudentMeasure: NSObject, NSCoding {
+class StudentMeasure: Record {
     //MARK: Properties
+    var sem_id : Int64
+    var eval_id: Int64
     var result: String?
-    var measure_id: Int
-    
-    // MARK: Archiving Paths
-    
-    static let DocumentsDirectory = NSFileManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
-    static let ArchiveURL = DocumentsDirectory.URLByAppendingPathComponent("measures")
+    var measure_id: Int64
+    var measure_desc: String?
     
     //MARK: Initialization
-    struct PropertyKey{
-        static let measureDescKey = "result"
-        static let measureIdKey = "measure_id"
-    }
-    
-    init?(result: String?, measure_id: Int){
+    init?(result: String?, measure_id: Int64, eval_id: Int64, sem_id: Int64, measure_desc: String?){
         // Initialize stored properties
         self.result = result
         self.measure_id = measure_id
+        self.sem_id = sem_id
+        self.eval_id = eval_id
+        self.measure_desc = measure_desc
         super.init()
         
     }
     
-    func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(result, forKey: PropertyKey.measureDescKey)
-        aCoder.encodeInteger(measure_id, forKey: PropertyKey.measureIdKey)
+    required init(_ row: Row) {
+        self.sem_id = row.value(named: "sem_id")
+        self.measure_id = row.value(named: "measure_id")
+        self.eval_id = row.value(named: "eval_id")
+        self.result = row.value(named: "result")
+        self.measure_desc = row.value(named: "measure_desc")
+        super.init()
     }
     
-    required convenience init?(coder aDecoder: NSCoder) {
-        
-        let result = aDecoder.decodeObjectForKey(PropertyKey.measureDescKey) as? String
-        let measure_id = aDecoder.decodeIntegerForKey(PropertyKey.measureIdKey)
-        self.init(result:result, measure_id:measure_id)
+    override class func databaseTableName() -> String {
+        return "skills_evaluation_measures"
     }
+    
+    override var persistentDictionary: [String: DatabaseValueConvertible?] {
+        return ["sem_id": sem_id, "eval_id": eval_id, "result": result, "measure_id":measure_id, "measure_desc":measure_desc]
+    }
+    
+    override func didInsertWithRowID(rowID: Int64, forColumn column: String?) {
+        measure_id = rowID
+    }
+    
+    
 }

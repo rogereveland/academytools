@@ -37,7 +37,8 @@ class Academy: Record {
         super.init()
         
     }
-       required init(_ row: Row) {
+    
+    required init(_ row: Row) {
         self.group_name = row.value(named: "group_name")
         self.group_id = row.value(named: "group_id")
         //self.students = row.value(named: "students")

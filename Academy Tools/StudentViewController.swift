@@ -13,6 +13,7 @@ class StudentViewController: UIViewController, UITableViewDelegate, UITableViewD
     var student:Student!
     var studentMeasures:[StudentMeasure] = []
     var skills = [Skill]()
+    var studentEvals = [StudentEval]()
     
     @IBOutlet weak var evalTable: UITableView!
     @IBOutlet weak var evaluatorName: UILabel!
@@ -65,28 +66,69 @@ class StudentViewController: UIViewController, UITableViewDelegate, UITableViewD
                 let evals = json["evals"]
                 var evalsArr = [StudentEval]()
                 for (_,e):(String, JSON) in evals {
-                    let evaluatorName = e["evaluatorName"].string
-                    let eval_id = e["eval_id"].int
+                    let evaluator_name = e["evaluatorName"].string
+                    let eval_id = e["eval_id"].int64
                     let comments = e["comments"].string
                     let passfail = e["passfail"].string
-                    let skill_id = e["skill_id"].int
+                    let skill_id = e["skill_id"].int64
                     let measures = e["measures"]
                     let eval_date = e["eval_date"].string
-                    var measuresArr = [StudentMeasure]()
+                    var x = Int64(0)
                     for(_,m):(String, JSON) in measures{
+                        
+                        x = x+1
+                        let measure_desc = String.fetchOne(dbQueue,
+                            "SELECT measure_desc " +
+                                "FROM academy_skills_measures " +
+                            "WHERE measure_id = ?"
+                            , arguments:[m["measure_id"].int64])
+                        let result = m["result"].string
+                        let measure_id = m["measure_id"].int64!
+                        let eval_id = m["eval_id"].int64!
+                        let sem_id = m["sem_id"].int64!
                         let newMeasure = StudentMeasure(
-                            result : m["result"].string,
-                            measure_id : m["measure_id"].int!
+                            result : result,
+                            measure_id : measure_id,
+                            eval_id : eval_id,
+                            sem_id : sem_id,
+                            measure_desc : measure_desc
                         )
-                        measuresArr.append(newMeasure!)
+                        do {
+                            try dbQueue.inDatabase { db in
+                                let updateSQL = "UPDATE academy_skills_measures SET result = ?, measure_id = ?, eval_id = ?, sem_id = ?, measure_desc = ? WHERE sem_id = ?"
+                                let updateStatement = try db.updateStatement(updateSQL)
+                                updateStatement.arguments = [result, measure_id, eval_id, sem_id, measure_desc]
+                                let changes = try updateStatement.execute()
+                                if changes.changedRowCount == 0 {
+                                    try newMeasure!.insert(db)
+                                }
+                            }
+                        } catch {}
                     }
-                    let newEval = StudentEval(eval_id:eval_id!, evaluatorName: evaluatorName!, skill_id: skill_id!, measures: measuresArr, comments: comments!, passfail: passfail!,eval_date: eval_date!)
+                    let newEval = StudentEval(eval_id:eval_id!, evaluator_name: evaluator_name!, skill_id: skill_id!, comments: comments!, overall_results: passfail!,eval_date: eval_date!)
+                    
+                    do {
+                        try dbQueue.inDatabase { db in
+                            let updateSQL = "UPDATE skills_evaluation SET eval_id = ?, evaluator_name = ?, skill_id = ?, comments = ?, overall_results = ?, eval_date = ? WHERE eval_id = ?"
+                            let updateStatement = try db.updateStatement(updateSQL)
+                            updateStatement.arguments = [eval_id, evaluator_name, skill_id, comments, passfail, eval_date, eval_id]
+                            let changes = try updateStatement.execute()
+                            if changes.changedRowCount == 0 {
+                                try newEval!.insert(db)
+                            }
+                        }
+                    } catch {}
+                    
                     evalsArr.append(newEval!)
                     
                 }
+                
                 self.student.evals = evalsArr
-                self.saveStudent()
-                self.skills = self.loadSkillsFromFile()!
+                self.studentEvals = StudentEval.fetchAll(dbQueue,
+                            "SELECT * " +
+                            "FROM skills_evaluation " +
+                            "WHERE student_id = ?"
+                        , arguments:[self.student.people_id])
                 
                 dispatch_async(dispatch_get_main_queue(), {
                     self.evalTable.reloadData()
@@ -100,23 +142,20 @@ class StudentViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         } else {
             self.loadingData.hidden = true
-            self.skills = self.loadSkillsFromFile()!
-            self.student = loadStudentFromFile()
+            let student = Student.fetchOne(dbQueue,
+                    "SELECT * " +
+                        "FROM academy_students " +
+                    "WHERE people_id = ?"
+                    , arguments:[self.student.people_id])
+                
+                
+                self.student = student
+            
             
         }
         
     }
 
-    func saveStudent(){
-        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(student!, toFile: Student.ArchiveURL.path!)
-        if !isSuccessfulSave {
-            print("Failed to save")
-        }
-    }
-    
-    func loadStudent() -> Student?{
-        return NSKeyedUnarchiver.unarchiveObjectWithFile(Student.ArchiveURL.path!) as? Student
-    }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
@@ -124,8 +163,7 @@ class StudentViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(student.evals!.count)
-        return student.evals!.count
+        return studentEvals.count
     }
     
     
@@ -134,32 +172,21 @@ class StudentViewController: UIViewController, UITableViewDelegate, UITableViewD
         let cellIdentifier = "evalCell"
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as!
         EvalTableViewCell
-        let studentEval = student.evals![indexPath.row]
-        cell.evaluatorName.text = studentEval.evaluatorName
-        cell.skillName.text = getSkillName(studentEval.skill_id)
-        cell.passFail.text = studentEval.passfail
+        let studentEval = studentEvals[indexPath.row]
+        let skillInfo = Skill.fetchOne(dbQueue,
+                "SELECT * " +
+                    "FROM academy_skills " +
+                "WHERE skill_id = ?"
+                , arguments:[self.studentEvals[indexPath.row].skill_id])
+            
+        cell.skillName.text = skillInfo!.skill_name
+        
+        cell.evaluatorName.text = studentEval.evaluator_name
+        cell.passFail.text = studentEval.overall_results
         cell.evaluationDate.text = studentEval.eval_date
         return cell
     }
     
-    func getSkillName(skill_id: Int) -> String {
-        for s in self.skills {
-            if s.skill_id == skill_id {
-                return s.skill_name!
-            }
-        }
-        return "Blank"
-    }
-    
-    func loadSkillsFromFile() -> [Skill]?{
-        return NSKeyedUnarchiver.unarchiveObjectWithFile(Skill.ArchiveURL.path!) as? [Skill]
-        
-    }
-    
-    func loadStudentFromFile() -> Student?{
-        return NSKeyedUnarchiver.unarchiveObjectWithFile(Student.ArchiveURL.path!) as? Student
-        
-    }
     
     // MARK: - Navigation
 

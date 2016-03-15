@@ -17,14 +17,18 @@ class StudentEvalTableViewController: UITableViewController, SettingCellDelegate
     @IBOutlet weak var measureDesc: UILabel!
     var selectedEval:StudentEval!
     var currentSkill:Skill!
+    var measures:[StudentMeasure]!
     var skills:[Skill]!
     
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.skills = loadSkillsFromFile()
-        self.currentSkill = getSkill(selectedEval.skill_id)
+        try dbQueue.inDatabase { db in
+            self.measures = StudentMeasure.fetchAll(db, "SELECT * FROM skills_evaluation_measures WHERE eval_id = ? ORDER BY measure_desc", arguments:[self.selectedEval.eval_id])
+        }
+        
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -50,7 +54,7 @@ class StudentEvalTableViewController: UITableViewController, SettingCellDelegate
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return selectedEval.measures!.count
+        return measures!.count
         //return 0
     }
 
@@ -59,13 +63,13 @@ class StudentEvalTableViewController: UITableViewController, SettingCellDelegate
         
         let cell = tableView.dequeueReusableCellWithIdentifier("StudentEvalTableViewCell", forIndexPath: indexPath) as! StudentEvalTableViewCell
         
-        let measure = selectedEval.measures![indexPath.row]
+        let measure = measures![indexPath.row]
         var switchOn = false
         if measure.result! == "Y" {
             switchOn = true
         }
         cell.passFailSwitch.setOn(switchOn, animated: false)
-        cell.measureDesc.text = getMeasureDesc(measure.measure_id)
+        cell.measureDesc.text = measure.measure_desc
         cell.passFailLabel.text = measure.result
         cell.cellDelegate = self
         
@@ -74,39 +78,9 @@ class StudentEvalTableViewController: UITableViewController, SettingCellDelegate
         return cell
     }
     
-    func getSkill(skill_id: Int) -> Skill? {
-        var currentSkill = skills[0]
-        for skill in skills {
-            if skill.skill_id == skill_id {
-                currentSkill = skill
-            }
-        }
-        
-        return currentSkill
-    }
-    
-    func getMeasureDesc(measure_id: Int) -> String? {
-        var measureDesc = ""
-        
-        for measure in self.currentSkill.measures! {
-            if measure.measure_id == measure_id {
-                measureDesc = measure.measure_desc!
-            }
-        }
-        
-        return measureDesc
-    }
-    
-    func loadSkillsFromFile() -> [Skill]?{
-        return NSKeyedUnarchiver.unarchiveObjectWithFile(Skill.ArchiveURL.path!) as? [Skill]
-        
-    }
-    
-    
-    
     func didChangeSwitchState(sender sender: StudentEvalTableViewCell, isOn: Bool) {
         let indexPath = self.tableView.indexPathForCell(sender)
-        var measure = selectedEval.measures![indexPath!.row]
+        var measure = measures![indexPath!.row]
         
         if isOn {
             measure.result = "Y"
@@ -118,12 +92,7 @@ class StudentEvalTableViewController: UITableViewController, SettingCellDelegate
         
     }
     
-    func saveSkills(){
-        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(skills, toFile: Skill.ArchiveURL.path!)
-        if !isSuccessfulSave {
-            print("Failed to save")
-        }
-    }
+    
 
     /*
     // Override to support conditional editing of the table view.

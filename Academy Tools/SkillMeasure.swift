@@ -1,22 +1,13 @@
 import UIKit
+import GRDB
 
-class SkillMeasure: NSObject, NSCoding {
+class SkillMeasure: Record {
     //MARK: Properties
     var measure_desc: String?
-    var measure_id: Int
+    var measure_id: Int64
     
-    // MARK: Archiving Paths
     
-    static let DocumentsDirectory = NSFileManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
-    static let ArchiveURL = DocumentsDirectory.URLByAppendingPathComponent("measures")
-    
-    //MARK: Initialization
-    struct PropertyKey{
-        static let measureDescKey = "measure_desc"
-        static let measureIdKey = "measure_id"
-    }
-    
-    init?(measure_desc: String?, measure_id: Int){
+    init?(measure_desc: String?, measure_id: Int64){
         // Initialize stored properties
         self.measure_desc = measure_desc
         self.measure_id = measure_id
@@ -24,15 +15,21 @@ class SkillMeasure: NSObject, NSCoding {
         
     }
     
-    func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(measure_desc, forKey: PropertyKey.measureDescKey)
-        aCoder.encodeInteger(measure_id, forKey: PropertyKey.measureIdKey)
+    required init(_ row: Row) {
+        self.measure_desc = row.value(named: "measure_desc")
+        self.measure_id = row.value(named: "measure_id")
+        super.init()
     }
     
-    required convenience init?(coder aDecoder: NSCoder) {
-        
-        let measure_desc = aDecoder.decodeObjectForKey(PropertyKey.measureDescKey) as? String
-        let measure_id = aDecoder.decodeIntegerForKey(PropertyKey.measureIdKey)
-        self.init(measure_desc:measure_desc, measure_id:measure_id)
+    override class func databaseTableName() -> String {
+        return "academy_skills_measures"
+    }
+    
+    override var persistentDictionary: [String: DatabaseValueConvertible?] {
+        return ["measure_id": measure_id, "measure_desc": measure_desc]
+    }
+    
+    override func didInsertWithRowID(rowID: Int64, forColumn column: String?) {
+        measure_id = rowID
     }
 }
