@@ -24,10 +24,13 @@ class StudentEvalTableViewController: UITableViewController, SettingCellDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        try dbQueue.inDatabase { db in
+        dbQueue.inDatabase { db in
             self.measures = StudentMeasure.fetchAll(db, "SELECT * FROM skills_evaluation_measures WHERE eval_id = ? ORDER BY measure_desc", arguments:[self.selectedEval.eval_id])
         }
-        
+        print(self.measures.count)
+        dispatch_async(dispatch_get_main_queue(), {
+            self.tableView.reloadData()
+        })
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -54,6 +57,7 @@ class StudentEvalTableViewController: UITableViewController, SettingCellDelegate
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
+        
         return measures!.count
         //return 0
     }
@@ -68,6 +72,7 @@ class StudentEvalTableViewController: UITableViewController, SettingCellDelegate
         if measure.result! == "Y" {
             switchOn = true
         }
+        
         cell.passFailSwitch.setOn(switchOn, animated: false)
         cell.measureDesc.text = measure.measure_desc
         cell.passFailLabel.text = measure.result
@@ -87,8 +92,13 @@ class StudentEvalTableViewController: UITableViewController, SettingCellDelegate
         } else {
             measure.result = "N"
         }
+        do {
+            try dbQueue.inDatabase { db in
+                try measure.update(db)
+            }
+        } catch{}
         
-        print("Called it")
+        tableView.reloadData()
         
     }
     

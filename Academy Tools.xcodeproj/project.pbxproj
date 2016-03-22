@@ -14,6 +14,8 @@
 		087BAA421C86A38000575845 /* StudentEval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087BAA411C86A38000575845 /* StudentEval.swift */; };
 		087BAA441C86A52700575845 /* StudentMeasure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087BAA431C86A52700575845 /* StudentMeasure.swift */; };
 		087BAA461C8947AC00575845 /* EvalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087BAA451C8947AC00575845 /* EvalTableViewCell.swift */; };
+		08C77CBC1C98EA3000C9108F /* GRDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 081E011D1C936C2900C3171A /* GRDB.framework */; };
+		08C77CBD1C98EA3000C9108F /* GRDB.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 081E011D1C936C2900C3171A /* GRDB.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		08D906D51C84E16500661C69 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D906D41C84E16500661C69 /* LoginViewController.swift */; };
 		08D906D71C84EA5900661C69 /* Instructor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D906D61C84EA5900661C69 /* Instructor.swift */; };
 		08D906D91C85F9EF00661C69 /* StartupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D906D81C85F9EF00661C69 /* StartupViewController.swift */; };
@@ -80,6 +82,13 @@
 			remoteGlobalIDString = 56E5D7D31B4D3FEE00430942;
 			remoteInfo = GRDBiOSTests;
 		};
+		08C77CBE1C98EA3000C9108F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 081E010A1C936C2900C3171A /* GRDB.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 56E5D7C91B4D3FED00430942;
+			remoteInfo = GRDBiOS;
+		};
 		08F58E5F1C7F91E9001B21FB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08F58E3F1C7F91E8001B21FB /* Project object */;
@@ -88,6 +97,20 @@
 			remoteInfo = "Academy Tools";
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		08C77CC01C98EA3000C9108F /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				08C77CBD1C98EA3000C9108F /* GRDB.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		081E010A1C936C2900C3171A /* GRDB.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GRDB.xcodeproj; path = "../../../../Downloads/GRDB.swift-master/GRDB.xcodeproj"; sourceTree = "<group>"; };
@@ -130,6 +153,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				081E01211C936C8600C3171A /* GRDB.framework in Frameworks */,
+				08C77CBC1C98EA3000C9108F /* GRDB.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -228,10 +252,12 @@
 				08F58E431C7F91E8001B21FB /* Sources */,
 				08F58E441C7F91E8001B21FB /* Frameworks */,
 				08F58E451C7F91E8001B21FB /* Resources */,
+				08C77CC01C98EA3000C9108F /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				08C77CBF1C98EA3000C9108F /* PBXTargetDependency */,
 			);
 			name = "Academy Tools";
 			productName = "Academy Tools";
@@ -409,6 +435,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		08C77CBF1C98EA3000C9108F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GRDBiOS;
+			targetProxy = 08C77CBE1C98EA3000C9108F /* PBXContainerItemProxy */;
+		};
 		08F58E601C7F91E9001B21FB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 08F58E461C7F91E8001B21FB /* Academy Tools */;
@@ -523,6 +554,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = "Academy Tools/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -535,6 +567,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = "Academy Tools/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

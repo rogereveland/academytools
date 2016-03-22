@@ -117,6 +117,22 @@ func setupDatabase() {
             "ALTER TABLE skills_evaluation_measures ADD COLUMN measure_desc TEXT")
     }
     
+    migrator.registerMigration("createUpdateHistory") { db in
+        try db.execute(
+            "CREATE TABLE update_history (" +
+                "eval_update TIMESTAMP " +
+                "skills_update TIMESTAMP " +
+            ")"
+        )
+        
+    }
+    
+    migrator.registerMigration("AddSortDate") { db in
+        try db.execute(
+            "ALTER TABLE skills_evaluation ADD COLUMN sort_date TIMESTAMP")
+    }
+    
+    
     try! migrator.migrate(dbQueue)
     /*
     migrator.registerMigration("addPersons") { db in
